@@ -1,7 +1,7 @@
 {
-  "name": "ssapp-template",
+  "name": "leaflet-manager-app",
   "version": "1.0.0",
-  "description": "SSApp Template",
+  "description": "leaflet-manager-app",
   "main": "index.js",
   "scripts": {
     "postinstall": "node ./node_modules/octopus/scripts/run",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PrivateSky/ssapp-template.git"
+    "url": "git+https://github.com/PrivateSky/leaflet-manager-app.git"
   },
   "dependencies": {
     "octopus": "git+https://github.com/PrivateSky/octopus.git#1.0.1"
@@ -24,7 +24,7 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PrivateSky/ssapp-template/issues"
+    "url": "https://github.com/PrivateSky/leaflet-manager-app/issues"
   },
-  "homepage": "https://github.com/PrivateSky/ssapp-template#readme"
+  "homepage": "https://github.com/PrivateSky/leaflet-manager-app#readme"
 }
