@@ -7,7 +7,7 @@ export default class newProductsController extends ContainerController {
 		console.log("Preparing to set up the view model");
 		let viewModel = {
 			AddProductBtn:{
-				label: "Add product",
+				label: "Save",
 				eventName: "add-product"
 			},
 			edit:{
