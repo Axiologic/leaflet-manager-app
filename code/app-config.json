@@ -1,24 +1,34 @@
 {
-    "basePagesUrl": "/pages/",
-    "profile": {
-        "username": "SSapp",
-        "email": "your-email@domain.com",
-        "avatar": "/resources/images/cardinal.png"
+  "theme":"default",
+  "appVersion": "1.0.0",
+  "basePagesUrl": "/pages/",
+  "profile": {
+    "username": "SSapp",
+    "email": "your-email@domain.com",
+    "avatar": "/resources/images/cardinal.png"
+  },
+  "menu": {
+    "defaultMenuConfig": {
+      "icon": "fa-bars",
+      "type": "route",
+      "component": "psk-page-loader",
+      "exact": true,
+      "404": "/pages/404.html"
     },
-    "menu": {
-        "defaultMenuConfig": {
-            "icon": "fa-bars",
-            "type": "route",
-            "component": "psk-page-loader",
-            "exact": true,
-            "404": "/pages/404.html"
-        },
-        "pages": [{
-                "name": "Home",
-                "path": "/home",
-                "icon": "fa-home",
-                "pageSrc": "home.html"
-            }
-        ]
-    }
+    "pages": [
+      {
+        "name": "Products"
+      },
+      {
+        "name": "Home",
+        "path": "/home",
+        "icon": "fa-home",
+        "pageSrc": "home.html"
+      },
+      {
+        "name": "Add product",
+        "indexed": false
+      }
+    ]
+  }
 }
