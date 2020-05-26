@@ -1,14 +1,13 @@
 <psk-page title="New Product">
-    <psk-container controller-name="newProductController">
-        <psk-form>
-            <psk-text-input view-model="edit.name"></psk-text-input>
-            <psk-text-input view-model="edit.serialNumber"></psk-text-input>
-        </psk-form>
-
+    <psk-form controller-name="newProductController">
+        <psk-text-input label="Name" value="@name"></psk-text-input>
+        <psk-text-input label="Product Type Serial Number" value="@productTypeSerialNumber"></psk-text-input>
+        <psk-files-chooser label="Package Photo" event-name="package-photo-selected"></psk-files-chooser>
         <psk-grid columns="3" layout="xs=[2,8,2] s=[2,8,2] m=[2,8,2] xl=[2,8,2]">
             <div></div>
-            <psk-button view-model="AddProductBtn"></psk-button>
+            <psk-button label="Add Product" event-name="add-product"></psk-button>
             <div></div>
         </psk-grid>
-    </psk-container>
+        <psk-list-feedbacks></psk-list-feedbacks>
+    </psk-form>
 </psk-page>

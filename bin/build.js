@@ -48,9 +48,9 @@ function build(callback) {
 			if (err) {
 				return callback(err);
 			}
-
 			updateWallet(bar, callback);
 		});
+
 	});
 }
 

@@ -20,12 +20,6 @@
         "name": "Products"
       },
       {
-        "name": "Home",
-        "path": "/home",
-        "icon": "fa-home",
-        "pageSrc": "home.html"
-      },
-      {
         "name": "Add product",
         "indexed": false
       }
