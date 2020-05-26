@@ -2,12 +2,13 @@
     outline: none !important;
 }
 
-:host {
+ :host {
     scroll-behavior: smooth;
 }
 
 .btn-link {
     color: #007bff;
+    text-decoration: none;
 }
 
 .btn-link:focus,
@@ -27,7 +28,7 @@
     transition: color .5s ease-in;
 }
 
-:host {
+ :host {
     display: inline-block;
     font-family: nunito;
     position: relative;

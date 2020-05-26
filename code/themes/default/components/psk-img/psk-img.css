@@ -1,23 +1,21 @@
-* {
-    outline: none !important;
-}
-
-:host {
-    scroll-behavior: smooth;
-}
-
 .image_container {
     text-align: center;
-    margin-bottom: 20px;
 }
 
 .image_description {
     text-align: center;
     padding: 10px;
     font-style: italic;
+    font-size: 1rem;
+}
+.image_description::before{
+    content:"- ";
+}
+.image_description::after{
+    content:" -";
 }
 
-:host {
-    display: block;
-    font-family: nunito;
+.image_wrapper{
+    margin-bottom: 5px;
+    margin-top: 5px;
 }

@@ -11,7 +11,7 @@ function generateProductCode(length) {
 export default class Product {
 	name = "";
 	productTypeSerialNumber = "";
-	photo = "/assets/images/default.png";
+	photo = "/resources/images/default.png";
 	serialNumber = generateProductCode(10);
 
 	constructor(product) {

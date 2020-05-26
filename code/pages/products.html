@@ -4,9 +4,13 @@
             <psk-for-each slot="condition-true" data-view-model="products">
                 <psk-form-row columns="2" layout="xs=[2,8] s=[2,8] m=[2,8] xl=[2,10]">
                     <psk-img src="@photo"></psk-img>
-                    <psk-card title="@name" layout="xs=[2,8] s=[2,8] m=[2,8] xl=[2,10]">
+                    <div>
+                        <b><psk-label label="@name" onclick="this.dispatchEvent(new Event('edit-product'))"></psk-label></b>
                         <psk-label label="@serialNumber"></psk-label>
-                    </psk-card>
+                    </div>
+                   <!-- <psk-card title="@name" layout="xs=[2,8] s=[2,8] m=[2,8] xl=[2,10]">
+                        <psk-label label="@serialNumber"></psk-label>
+                    </psk-card>-->
                 </psk-form-row>
                 <div slot="no-data">No Products.</div>
             </psk-for-each>

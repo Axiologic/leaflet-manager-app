@@ -1,34 +1,71 @@
-@import url(../../../commons/fonts/font-awesome.min.css);
-@import url(../../../commons/bootstrap/css/bootstrap.min.css);
 * {
     outline: none !important;
+    background: #fff;
+    font-family: "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 :host {
     scroll-behavior: smooth;
-}
-
-:host {
+    overflow-y: auto;
+    height: 100vh;
     display: block;
-    font-family: nunito;
 }
 
-nav {
+.main-content {
     width: 100%;
-    line-height: 4.375rem;
-    background-color: #fff !important;
-    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15) !important;
-    margin-bottom: 20px;
-    padding: 18px;
-}
-
-nav h3 {
-    margin-bottom: 0;
-    padding: 0 0 0 20px;
-    font-size: 1.75rem;
-    color: #5a5c69;
 }
 
 .page-content {
-    color: #3d3e44;
+    color: #565656;
+    padding: 0 45px 30px;
+    display: flex;
+}
+
+.main-container {
+    order: 1;
+    flex:2;
+}
+
+.toc {
+    flex: 1;
+    order: 2;
+}
+
+.page-title {
+    height: 80px;
+    background-color: #fff;
+    box-shadow: 0 0.15rem 1rem 0 rgba(58, 59, 69, 0.2);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.page-title h1 {
+    color: rgb(94, 127, 225);
+    font-weight: 700;
+    text-align: left;
+    margin: 0;
+    padding-left: 60px;
+    font-size: 1.802rem;
+}
+
+@media (min-width: 1367px) {
+    .toc + .container {
+        max-width: calc(100% - 25rem );
+    }
+}
+
+
+@media(max-width: 1366px) {
+    .page-content {
+        flex-direction: column;
+    }
+    .container {
+        flex: auto;
+        order: 2;
+    }
+    .toc {
+        flex: auto;
+        order: 1;
+    }
 }

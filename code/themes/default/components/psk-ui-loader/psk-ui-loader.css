@@ -1,5 +1,4 @@
 .sk-fading-circle {
-    margin: auto;
     width: 40px;
     height: 60px;
     position: relative;
@@ -147,9 +146,7 @@
 }
 
 @-webkit-keyframes sk-circleFadeDelay {
-    0%,
-    39%,
-    100% {
+    0%, 39%, 100% {
         opacity: 0;
     }
     40% {
@@ -158,9 +155,7 @@
 }
 
 @keyframes sk-circleFadeDelay {
-    0%,
-    39%,
-    100% {
+    0%, 39%, 100% {
         opacity: 0;
     }
     40% {
@@ -169,7 +164,16 @@
 }
 
 .loader-container {
-    height: 100%;
+    height: 75vh;
+    position: relative;
     min-height: 100%;
     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media(max-width:960px) {
+    .loader-container {
+        position: static;
+    }
 }

@@ -20,7 +20,7 @@
         "name": "Products"
       },
       {
-        "name": "Add product",
+        "name": "Manage product",
         "indexed": false
       }
     ]

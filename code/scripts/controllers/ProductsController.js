@@ -27,8 +27,23 @@ export default class ProductsController extends ContainerController {
 		});
 
 		this.on("add-product", (event)=>{
-			history.push("/add-product");
+			history.push("/manage-product");
 		});
+
+		this.on("edit-product", (event)=>{
+			console.log("Caught event", event);
+			let target = event.target;
+			let targetLabel = target.getAttribute("label");
+			const regex = /[\d]+/gm;
+			const index = regex.exec(targetLabel);
+
+			history.push({
+				pathname: '/manage-product',
+				state: {
+					productIndex: Array.isArray(index) ? index[0] : index
+				}
+			});
+		}, {capture: true});
 
 		this.on("view-drug", (event)=>{
 			history.push("/drug-details");

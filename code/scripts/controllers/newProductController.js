@@ -4,8 +4,22 @@ import Product from "../models/Product.js";
 export default class newProductsController extends ContainerController {
 	constructor(element, history) {
 		super(element);
-		console.log("Preparing to set up the view model");
-		this.setModel(new Product());
+
+		let productIndex;
+		if(typeof history.location.state !== "undefined"){
+			productIndex = history.location.state.productIndex;
+		}
+		if(typeof productIndex !== "undefined"){
+			this.DSUStorage.getItem("/data/products.json", "json", (err, productsRepo)=>{
+				if(err){
+					throw err;
+				}
+
+				this.setModel(new Product(productsRepo.products[productIndex]));
+			});
+		}else{
+			this.setModel(new Product());
+		}
 
 		this.on("package-photo-selected", (event)=>{
 			this.packagePhoto = event.data[0];
@@ -49,12 +63,7 @@ export default class newProductsController extends ContainerController {
 					history.push("/products");
 				});
 			}
-
 		});
-	}
-
-	setPhoto(product, file, callback){
-
 	}
 
 	persistProduct(product, callback){
@@ -66,6 +75,13 @@ export default class newProductsController extends ContainerController {
 
 			if(typeof productsRepo === "undefined"){
 				productsRepo = {products: []};
+			}
+
+			for(let i=0; i<productsRepo.products.length; i++){
+				let prod = productsRepo.products[i];
+				if(prod.name === product.name && prod.productTypeSerialNumber === product.productTypeSerialNumber){
+					return callback(new Error("Product already exists into the list!"));
+				}
 			}
 
 			productsRepo.products.push(product);
