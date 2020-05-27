@@ -5,6 +5,8 @@ export default class newProductsController extends ContainerController {
 	constructor(element, history) {
 		super(element);
 
+
+		this.setModel({});
 		if(typeof history.location.state !== "undefined"){
 			this.productIndex = history.location.state.productIndex;
 		}
@@ -14,14 +16,14 @@ export default class newProductsController extends ContainerController {
 					throw err;
 				}
 
-				this.setModel(new Product(productsRepo.products[this.productIndex]));
+				this.model.product = new Product(productsRepo.products[this.productIndex]);
 			});
 		}else{
-			this.setModel(new Product());
+			this.model.product = new Product();
 		}
 
 		this.on("package-photo-selected", (event)=>{
-			this.packagePhoto = event.data[0];
+			this.packagePhoto = event.data;
 		});
 
 		this.on('openFeedback', (e) => {
@@ -29,7 +31,7 @@ export default class newProductsController extends ContainerController {
 		});
 
 		this.on("add-product", (event)=>{
-			let product = this.model;
+			let product = this.model.product;
 			let validationResult = product.validate();
 			if(Array.isArray(validationResult)){
 				for(let i = 0; i<validationResult.length; i++){
