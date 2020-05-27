@@ -5,17 +5,16 @@ export default class newProductsController extends ContainerController {
 	constructor(element, history) {
 		super(element);
 
-		let productIndex;
 		if(typeof history.location.state !== "undefined"){
-			productIndex = history.location.state.productIndex;
+			this.productIndex = history.location.state.productIndex;
 		}
-		if(typeof productIndex !== "undefined"){
+		if(typeof this.productIndex !== "undefined"){
 			this.DSUStorage.getItem("/data/products.json", "json", (err, productsRepo)=>{
 				if(err){
 					throw err;
 				}
 
-				this.setModel(new Product(productsRepo.products[productIndex]));
+				this.setModel(new Product(productsRepo.products[this.productIndex]));
 			});
 		}else{
 			this.setModel(new Product());
@@ -23,6 +22,10 @@ export default class newProductsController extends ContainerController {
 
 		this.on("package-photo-selected", (event)=>{
 			this.packagePhoto = event.data[0];
+		});
+
+		this.on('openFeedback', (e) => {
+			this.feedbackEmitter = e.detail;
 		});
 
 		this.on("add-product", (event)=>{
@@ -77,10 +80,16 @@ export default class newProductsController extends ContainerController {
 				productsRepo = {products: []};
 			}
 
-			for(let i=0; i<productsRepo.products.length; i++){
-				let prod = productsRepo.products[i];
-				if(prod.name === product.name && prod.productTypeSerialNumber === product.productTypeSerialNumber){
-					return callback(new Error("Product already exists into the list!"));
+
+			if(typeof this.productIndex !== "undefined"){
+				//update of a product scenario
+				productsRepo.products.splice(this.productIndex, 1);
+			}else{
+				for(let i=0; i<productsRepo.products.length; i++){
+					let prod = productsRepo.products[i];
+					if(prod.name === product.name && prod.productTypeSerialNumber === product.productTypeSerialNumber){
+						return callback(new Error("Product already exists into the list!"));
+					}
 				}
 			}
 
