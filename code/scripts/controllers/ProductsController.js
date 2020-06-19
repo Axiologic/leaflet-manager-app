@@ -1,4 +1,5 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
+const storagePath = "/app/data/products.json";
 
 export default class ProductsController extends ContainerController {
 	constructor(element, history) {
@@ -13,7 +14,7 @@ export default class ProductsController extends ContainerController {
 		}, 'products');
 
 		console.log("Preparing to set up the view model");
-		this.DSUStorage.getItem("/data/products.json", "json", function(err, productsRepo){
+		this.DSUStorage.getItem(storagePath, "json", function(err, productsRepo){
 			if(err){
 				//todo: implement better error handling
 				//throw err;

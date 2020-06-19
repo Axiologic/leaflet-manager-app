@@ -1,0 +1,25 @@
+<psk-page title="Leaflets">
+    <psk-form controller-name="LeafletsController">
+        <psk-condition condition="@leafletsListLoaded">
+            <psk-for-each slot="condition-true" data-view-model="leaflets">
+                <psk-form-row columns="2" layout="xs=[3,9] s=[3,9] m=[3,9] xl=[3,9]">
+                    <psk-img src="/data/photos/leaflet.png"></psk-img>
+                    <div>
+                        <b><psk-label label="@name" onclick="this.dispatchEvent(new Event('edit-leaflet'))"></psk-label></b>
+                        <psk-label label="@activeSubstances"></psk-label>
+                    </div>
+                </psk-form-row>
+                <div slot="no-data">No Leaflets.</div>
+            </psk-for-each>
+            <div slot="condition-false">
+                Leaflets list loading...
+            </div>
+        </psk-condition>
+
+        <psk-grid columns="3" layout="xs=[2,8,2] s=[2,8,2] m=[2,8,2] xl=[2,8,2]">
+            <div></div>
+            <psk-button event-name="add-leaflet" label="Create Leaflet"></psk-button>
+            <div></div>
+        </psk-grid>
+    </psk-form>
+</psk-page>

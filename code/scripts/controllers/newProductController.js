@@ -1,17 +1,17 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
 import Product from "../models/Product.js";
+const storagePath = "/app/data/products.json";
 
-export default class newProductsController extends ContainerController {
+export default class newProductController extends ContainerController {
 	constructor(element, history) {
 		super(element);
-
 
 		this.setModel({});
 		if(typeof history.location.state !== "undefined"){
 			this.productIndex = history.location.state.productIndex;
 		}
 		if(typeof this.productIndex !== "undefined"){
-			this.DSUStorage.getItem("/data/products.json", "json", (err, productsRepo)=>{
+			this.DSUStorage.getItem(storagePath, "json", (err, productsRepo)=>{
 				if(err){
 					throw err;
 				}
@@ -72,7 +72,7 @@ export default class newProductsController extends ContainerController {
 	}
 
 	persistProduct(product, callback){
-		this.DSUStorage.getItem('/data/products.json', 'json', (err, productsRepo)=>{
+		this.DSUStorage.getItem(storagePath, 'json', (err, productsRepo)=>{
 			if(err){
 				// if no products file found an error will be captured here
 				//todo: improve error handling here
@@ -96,7 +96,7 @@ export default class newProductsController extends ContainerController {
 			}
 
 			productsRepo.products.push(product);
-			this.DSUStorage.setItem('/data/products.json', JSON.stringify(productsRepo), callback);
+			this.DSUStorage.setItem(storagePath, JSON.stringify(productsRepo), callback);
 		});
 	}
 
