@@ -1,31 +1,28 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
-const leafletsPath = "/app/data/leaflets.json";
-const productsPath = "/app/data/products.json";
+const LEAFLETS_PATH = "/app/data/leaflets.json";
+const PRODUCTS_PATH = "/app/data/products.json";
 
 export default class LeafletsController extends ContainerController {
 	constructor(element, history) {
 		super(element);
-		let self = this;
 
 		this.setModel({});
 
-		this.model.addExpression('leafletsListLoaded', function () {
-			console.log("Expression checking", typeof self.model.leaflets !== "undefined");
-			return typeof self.model.leaflets !== "undefined";
+		this.model.addExpression('leafletsListLoaded', () => {
+			return typeof this.model.leaflets !== "undefined";
 		}, 'leaflets');
 
-		console.log("Preparing to set up the view model");
-		this.DSUStorage.getItem(leafletsPath, "json", function(err, leafletsRepo){
+		this.DSUStorage.getObject(LEAFLETS_PATH,  (err, leaflets) => {
 			if(err){
 				//todo: implement better error handling
 				//throw err;
 			}
 
-			if(typeof leafletsRepo === "undefined"){
-				return self.model.leaflets = [];
+			if(typeof leaflets === "undefined"){
+				return this.model.leaflets = [];
 			}
 
-			self.model.leaflets = leafletsRepo.leaflets;
+			this.model.leaflets = leaflets;
 		});
 
 		this.on("add-leaflet", (event)=>{
@@ -33,7 +30,6 @@ export default class LeafletsController extends ContainerController {
 		});
 
 		this.on("edit-leaflet", (event)=>{
-			console.log("Caught event", event);
 			let target = event.target;
 			let targetLabel = target.getAttribute("label");
 			const regex = /[\d]+/gm;

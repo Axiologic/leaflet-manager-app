@@ -34,4 +34,8 @@ export default class Product {
 
 		return errors.length === 0 ? true : errors;
 	}
+
+	generateViewModel(){
+		return {label:this.name, value: this.serialNumber}
+	}
 }
