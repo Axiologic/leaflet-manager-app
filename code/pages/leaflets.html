@@ -2,7 +2,7 @@
     <psk-form controller-name="LeafletsController">
         <psk-condition condition="@leafletsListLoaded">
             <psk-for-each slot="condition-true" data-view-model="leaflets">
-                <psk-form-row columns="2" layout="xs=[3,9] s=[3,9] m=[3,9] xl=[3,9]">
+                <psk-form-row columns="2" layout="xs=[2,10] s=[2,10] m=[2,10] xl=[2,10]" class="withSeparator">
                     <psk-img src="/data/photos/leaflet.png"></psk-img>
                     <div>
                         <b><psk-label label="@name" onclick="this.dispatchEvent(new Event('edit-leaflet'))"></psk-label></b>

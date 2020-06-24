@@ -4,27 +4,24 @@ const storagePath = "/app/data/products.json";
 export default class ProductsController extends ContainerController {
 	constructor(element, history) {
 		super(element);
-		let self = this;
-
 		this.setModel({});
 
-		this.model.addExpression('productsListLoaded', function () {
-			console.log("Expression checking", typeof self.model.products !== "undefined");
-			return typeof self.model.products !== "undefined";
+		this.model.addExpression('productsListLoaded',  () => {
+			return typeof this.model.products !== "undefined";
 		}, 'products');
 
 		console.log("Preparing to set up the view model");
-		this.DSUStorage.getItem(storagePath, "json", function(err, productsRepo){
+		this.DSUStorage.getItem(storagePath, "json", (err, products) => {
 			if(err){
 				//todo: implement better error handling
 				//throw err;
 			}
 
-			if(typeof productsRepo === "undefined"){
-				return self.model.products = [];
+			if(typeof products === "undefined"){
+				return this.model.products = [];
 			}
 
-			self.model.products = productsRepo.products;
+			this.model.products = products;
 		});
 
 		this.on("add-product", (event)=>{
@@ -32,7 +29,6 @@ export default class ProductsController extends ContainerController {
 		});
 
 		this.on("edit-product", (event)=>{
-			console.log("Caught event", event);
 			let target = event.target;
 			let targetLabel = target.getAttribute("label");
 			const regex = /[\d]+/gm;

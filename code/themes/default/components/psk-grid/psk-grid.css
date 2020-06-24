@@ -1,0 +1,7 @@
+.withSeparator .row {
+    border-bottom: 1px solid #00000021;
+}
+
+.withSeparator:last-child .row {
+    border-bottom: 0px;
+}
