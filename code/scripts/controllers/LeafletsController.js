@@ -43,10 +43,6 @@ export default class LeafletsController extends ContainerController {
 			});
 		}, {capture: true});
 
-/*		this.on("view-drug", (event)=>{
-			history.push("/drug-details");
-		});*/
-
 		this.on('openFeedback', (e) => {
 			this.feedbackEmitter = e.detail;
 		});

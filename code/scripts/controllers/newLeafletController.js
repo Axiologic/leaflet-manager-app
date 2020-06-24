@@ -1,6 +1,5 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
 import Leaflet from "../models/Leaflet.js";
-import DossierBuilder from "../services/DossierBuilder.js";
 import Contact from "../models/Contact.js";
 import Product from "../models/Product.js";
 
@@ -23,6 +22,7 @@ export default class newLeafletController extends ContainerController {
                 }
 
                 this.model.leaflet = new Leaflet(leaflets[this.leafletIndex]);
+
             });
         } else {
             this.model.leaflet = new Leaflet();
@@ -34,10 +34,15 @@ export default class newLeafletController extends ContainerController {
             }
 
             let availableProducts = [];
+            let productsPlaceholder = "Select a product";
+            if (typeof this.model.leaflet.productId !== undefined) {
+                const prodName = products.find(product => product.serialNumber === this.model.leaflet.productId).name;
+                productsPlaceholder = prodName;
+            }
             products.forEach(product => availableProducts.push(new Product(product).generateViewModel()));
             this.model.products = {
                 label: "Products",
-                placeholder: "select product",
+                placeholder: productsPlaceholder,
                 options: availableProducts
             };
         });
@@ -47,10 +52,15 @@ export default class newLeafletController extends ContainerController {
                 contacts = [];
             }
             const options = [];
+            let contactsPlaceHolder = "Select a Health Authority";
+            if (typeof this.model.leaflet.healthAuthority !== "undefined") {
+                const healthAuthority = contacts.find(contact => contact.name === this.model.leaflet.healthAuthority);
+                contactsPlaceHolder = healthAuthority;
+            }
             contacts.forEach(contact => options.push(new Contact(contact).generateViewModel()));
             this.model.contacts = {
                 label: "Health Authority",
-                placeholder: "select",
+                placeholder: contactsPlaceHolder,
                 options: options
             };
 

@@ -9,13 +9,13 @@ function generateProductCode(length) {
 }
 
 export default class Leaflet {
-	name = "";
-	productId = "";
-	activeSubstances = "";
-	recommendations = "";
-	contraindication = "";
-	country = "";
-	healthAuthority = "";
+	name;
+	productId;
+	activeSubstances;
+	recommendations;
+	contraindication;
+	country;
+	healthAuthority;
 	attachment = "/resources/images/default.png";
 	id = generateProductCode(10);
 
