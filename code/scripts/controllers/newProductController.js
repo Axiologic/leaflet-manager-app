@@ -1,7 +1,8 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
 import Product from "../models/Product.js";
 
-const storagePath = "/app/data/products.json";
+const PRODUCTS_PATH = "/app/data/products.json";
+const LAST_PRODUCT_PATH = "/";
 
 export default class newProductController extends ContainerController {
     constructor(element, history) {
@@ -12,7 +13,7 @@ export default class newProductController extends ContainerController {
             this.productIndex = history.location.state.productIndex;
         }
         if (typeof this.productIndex !== "undefined") {
-            this.DSUStorage.getItem(storagePath, "json", (err, products) => {
+            this.DSUStorage.getObject(PRODUCTS_PATH, (err, products) => {
                 if (err) {
                     throw err;
                 }
@@ -73,7 +74,7 @@ export default class newProductController extends ContainerController {
     }
 
     persistProduct(product, callback) {
-        this.DSUStorage.getItem(storagePath, 'json', (err, products) => {
+        this.DSUStorage.getItem(PRODUCTS_PATH, 'json', (err, products) => {
             if (err) {
                 // if no products file found an error will be captured here
                 //todo: improve error handling here
@@ -83,21 +84,17 @@ export default class newProductController extends ContainerController {
                 products = [];
             }
 
-
             if (typeof this.productIndex !== "undefined") {
-                //update of a product scenario
                 products.splice(this.productIndex, 1);
             } else {
-                for (let i = 0; i < products.length; i++) {
-                    let prod = products[i];
-                    if (prod.name === product.name && prod.productTypeSerialNumber === product.productTypeSerialNumber) {
-                        return callback(new Error("Product already exists into the list!"));
-                    }
+                const prod = products.find(prod => prod.name === product.name);
+                if (typeof prod === "undefined") {
+                    return callback(new Error("Product already exists into the list!"));
                 }
             }
 
             products.push(product);
-            this.DSUStorage.setItem(storagePath, JSON.stringify(products), callback);
+            this.DSUStorage.setItem(PRODUCTS_PATH, JSON.stringify(products), callback);
         });
     }
 
