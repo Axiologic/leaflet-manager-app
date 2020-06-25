@@ -4,6 +4,7 @@ import Contact from "../models/Contact.js";
 import Product from "../models/Product.js";
 
 const PRODUCTS_PATH = "/app/data/products.json";
+const PROFILE_PATH = "/app/data/profile.json";
 const CONTACTS_PATH = "/app/data/contacts.json";
 const LEAFLETS_PATH = "/app/data/leaflets.json";
 
@@ -28,6 +29,8 @@ export default class newLeafletController extends ContainerController {
             this.model.leaflet = new Leaflet();
         }
 
+
+
         this.DSUStorage.getObject(PRODUCTS_PATH, (err, products) => {
             if (err) {
                 throw err;
@@ -36,8 +39,10 @@ export default class newLeafletController extends ContainerController {
             let availableProducts = [];
             let productsPlaceholder = "Select a product";
             if (typeof this.model.leaflet.productId !== undefined) {
-                const prodName = products.find(product => product.serialNumber === this.model.leaflet.productId).name;
-                productsPlaceholder = prodName;
+                let prod = products.find(product => product.serialNumber === this.model.leaflet.productId);
+                if (typeof prod !== "undefined") {
+                    productsPlaceholder = prod.name;
+                }
             }
             products.forEach(product => availableProducts.push(new Product(product).generateViewModel()));
             this.model.products = {
@@ -54,8 +59,10 @@ export default class newLeafletController extends ContainerController {
             const options = [];
             let contactsPlaceHolder = "Select a Health Authority";
             if (typeof this.model.leaflet.healthAuthority !== "undefined") {
-                const healthAuthority = contacts.find(contact => contact.name === this.model.leaflet.healthAuthority);
-                contactsPlaceHolder = healthAuthority;
+                const healthAuthority = contacts.find(contact => contact.code === this.model.leaflet.healthAuthority);
+                if (typeof healthAuthority !== "undefined") {
+                    contactsPlaceHolder = healthAuthority.name;
+                }
             }
             contacts.forEach(contact => options.push(new Contact(contact).generateViewModel()));
             this.model.contacts = {
@@ -74,36 +81,43 @@ export default class newLeafletController extends ContainerController {
             this.feedbackEmitter = e.detail;
         });
 
+        this.on("send-leaflet", (event) => {
+            this.DSUStorage.getObject(PROFILE_PATH, (err, profile) => {
+                let newEvent = new Event("send-leaflet");
+
+                newEvent.data = {
+                    leaflet:this.model.leaflet,
+                    source: profile.code
+                };
+                window.parent.dispatchEvent(newEvent);
+            });
+        }, {capture: true});
+
         this.on("add-leaflet", (event) => {
-            let leaflet = this.model.leaflet;
-            let validationResult = leaflet.validate();
-            if (Array.isArray(validationResult)) {
-                for (let i = 0; i < validationResult.length; i++) {
-                    let err = validationResult[i];
-                    this.showError(err);
-                }
-                return;
+            this.saveLeaflet(history);
+        });
+    }
+
+    saveLeaflet(history) {
+        let leaflet = this.model.leaflet;
+        let validationResult = leaflet.validate();
+        if (Array.isArray(validationResult)) {
+            for (let i = 0; i < validationResult.length; i++) {
+                let err = validationResult[i];
+                this.showError(err);
             }
+            return;
+        }
 
-            if (typeof this.packagePhoto !== "undefined") {
-                let leafletImagePath = `/data/photos/${leaflet.name}/image.png`;
-                this.DSUStorage.setItem(leafletImagePath, this.packagePhoto, (err) => {
-                    if (err) {
-                        return this.showError(err, "Leaflet photo upload failed.");
-                    }
+        if (typeof this.packagePhoto !== "undefined") {
+            let leafletImagePath = `/data/photos/${leaflet.name}/image.png`;
+            this.DSUStorage.setItem(leafletImagePath, this.packagePhoto, (err) => {
+                if (err) {
+                    return this.showError(err, "Leaflet photo upload failed.");
+                }
 
-                    leaflet.photo = "/download" + leafletImagePath;
+                leaflet.photo = "/download" + leafletImagePath;
 
-                    this.persistLeaflet(leaflet, (err) => {
-                        if (err) {
-                            this.showError(err, "Leaflet add process failed.");
-                            return;
-                        }
-
-                        history.push("/leaflets");
-                    });
-                });
-            } else {
                 this.persistLeaflet(leaflet, (err) => {
                     if (err) {
                         this.showError(err, "Leaflet add process failed.");
@@ -112,8 +126,17 @@ export default class newLeafletController extends ContainerController {
 
                     history.push("/leaflets");
                 });
-            }
-        });
+            });
+        } else {
+            this.persistLeaflet(leaflet, (err) => {
+                if (err) {
+                    this.showError(err, "Leaflet add process failed.");
+                    return;
+                }
+
+                history.push("/leaflets");
+            });
+        }
     }
 
     persistLeaflet(leaflet, callback) {
@@ -134,11 +157,9 @@ export default class newLeafletController extends ContainerController {
                 //update of a leaflet scenario
                 leaflets.splice(this.leafletIndex, 1);
             } else {
-                for (let i = 0; i < leaflets.length; i++) {
-                    let prod = leaflets[i];
-                    if (prod.name === leaflet.name && prod.leafletTypeSerialNumber === leaflet.leafletTypeSerialNumber) {
-                        return callback(new Error("Leaflet already exists into the list!"));
-                    }
+                let existingLeaflet = leaflets.find(l => l.name === leaflet.name && l.id === leaflet.id);
+                if (typeof existingLeaflet !== "undefined") {
+                    return callback(new Error("Leaflet already exists into the list!"));
                 }
             }
 

@@ -4,13 +4,11 @@
         <psk-text-input label="Active substances" value="@leaflet.activeSubstances"></psk-text-input>
         <psk-text-input label="Recommendations" value="@leaflet.recommendations"></psk-text-input>
         <psk-text-input label="Contraindication" value="@leaflet.contraindication"></psk-text-input>
-        <!--<psk-select view-model="@countries" value="@leaflet.country"></psk-select>-->
-        <psk-select view-model="@contacts" value="@leaflet.healthAuthority"></psk-select>
+        <psk-select view-model="@contacts" value="@leaflet.healthAuthority" required></psk-select>
         <psk-form-row>
             <psk-grid columns="3" layout="xs=[2,8,2] s=[2,8,2] m=[2,8,2] xl=[2,8,2]" style="max-width:900px;">
                 <psk-files-chooser label="Attach" event-name="attachment-selected" ></psk-files-chooser>
                 <psk-label label="@attachment.name"></psk-label>
-                <!--<psk-label src="@leaflet.attachment"></psk-label>-->
             </psk-grid>
         </psk-form-row>
 
