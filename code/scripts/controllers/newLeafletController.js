@@ -12,7 +12,7 @@ export default class newLeafletController extends ContainerController {
     constructor(element, history) {
         super(element);
 
-        this.setModel({});
+        this.setModel({products: {}, contacts: {}});
         if (typeof history.location.state !== "undefined") {
             this.leafletIndex = history.location.state.leafletIndex;
         }
@@ -28,7 +28,6 @@ export default class newLeafletController extends ContainerController {
         } else {
             this.model.leaflet = new Leaflet();
         }
-
 
 
         this.DSUStorage.getObject(PRODUCTS_PATH, (err, products) => {
@@ -50,27 +49,29 @@ export default class newLeafletController extends ContainerController {
                 placeholder: productsPlaceholder,
                 options: availableProducts
             };
-        });
 
-        this.DSUStorage.getObject(CONTACTS_PATH, (err, contacts) => {
-            if (typeof contacts === "undefined") {
-                contacts = [];
-            }
-            const options = [];
-            let contactsPlaceHolder = "Select a Health Authority";
-            if (typeof this.model.leaflet.healthAuthority !== "undefined") {
-                const healthAuthority = contacts.find(contact => contact.code === this.model.leaflet.healthAuthority);
-                if (typeof healthAuthority !== "undefined") {
-                    contactsPlaceHolder = healthAuthority.name;
+            console.log("Products ==============================================", this.model.products);
+            this.DSUStorage.getObject(CONTACTS_PATH, (err, contacts) => {
+                if (typeof contacts === "undefined") {
+                    contacts = [];
                 }
-            }
-            contacts.forEach(contact => options.push(new Contact(contact).generateViewModel()));
-            this.model.contacts = {
-                label: "Health Authority",
-                placeholder: contactsPlaceHolder,
-                options: options
-            };
+                const options = [];
+                let contactsPlaceHolder = "Select a Health Authority";
+                if (typeof this.model.leaflet.healthAuthority !== "undefined") {
+                    const healthAuthority = contacts.find(contact => contact.code === this.model.leaflet.healthAuthority);
+                    if (typeof healthAuthority !== "undefined") {
+                        contactsPlaceHolder = healthAuthority.name;
+                    }
+                }
+                contacts.forEach(contact => options.push(new Contact(contact).generateViewModel()));
+                this.model.contacts = {
+                    label: "Health Authority",
+                    placeholder: contactsPlaceHolder,
+                    options: options
+                };
+                console.log('Health authorities ====================================', this.model.contacts);
 
+            });
         });
 
         this.on("attachment-selected", (event) => {
@@ -85,11 +86,15 @@ export default class newLeafletController extends ContainerController {
             this.DSUStorage.getObject(PROFILE_PATH, (err, profile) => {
                 let newEvent = new Event("send-leaflet");
 
-                newEvent.data = {
-                    leaflet:this.model.leaflet,
-                    source: profile.code
-                };
-                window.parent.dispatchEvent(newEvent);
+                this.persistLeaflet(this.model.leaflet, (err) => {
+                    console.log("About to send leaflet $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ to", this.model.leaflet.healthAuthority, profile.code, profile.name);
+                    console.log("Here's the leaflet", this.model.leaflet);
+                    newEvent.data = {
+                        leaflet: this.model.leaflet,
+                        source: profile.code
+                    };
+                    window.parent.dispatchEvent(newEvent);
+                });
             });
         }, {capture: true});
 
