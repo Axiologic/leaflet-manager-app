@@ -2,6 +2,7 @@ import ContainerController from "../../cardinal/controllers/base-controllers/Con
 import Leaflet from "../models/Leaflet.js";
 import Contact from "../models/Contact.js";
 import Product from "../models/Product.js";
+import DossierBuilder from "../services/DossierBuilder.js";
 
 const PRODUCTS_PATH = "/app/data/products.json";
 const PROFILE_PATH = "/app/data/profile.json";
@@ -50,7 +51,6 @@ export default class newLeafletController extends ContainerController {
                 options: availableProducts
             };
 
-            console.log("Products ==============================================", this.model.products);
             this.DSUStorage.getObject(CONTACTS_PATH, (err, contacts) => {
                 if (typeof contacts === "undefined") {
                     contacts = [];
@@ -69,13 +69,11 @@ export default class newLeafletController extends ContainerController {
                     placeholder: contactsPlaceHolder,
                     options: options
                 };
-                console.log('Health authorities ====================================', this.model.contacts);
-
             });
         });
 
         this.on("attachment-selected", (event) => {
-            this.model.attachment = event.data[0];
+            this.attachment = event.data[0];
         });
 
         this.on('openFeedback', (e) => {
@@ -85,15 +83,27 @@ export default class newLeafletController extends ContainerController {
         this.on("send-leaflet", (event) => {
             this.DSUStorage.getObject(PROFILE_PATH, (err, profile) => {
                 let newEvent = new Event("send-leaflet");
-
                 this.persistLeaflet(this.model.leaflet, (err) => {
-                    console.log("About to send leaflet $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ to", this.model.leaflet.healthAuthority, profile.code, profile.name);
-                    console.log("Here's the leaflet", this.model.leaflet);
-                    newEvent.data = {
-                        leaflet: this.model.leaflet,
-                        source: profile.code
-                    };
-                    window.parent.dispatchEvent(newEvent);
+                    if (typeof $$.interactions === "undefined") {
+                        require('callflow').initialise();
+                        const se = require("swarm-engine");
+                        const identity = "test/agent/007";
+                        se.initialise(identity);
+                        const SRPC = se.SmartRemoteChannelPowerCord;
+                        let swUrl = "http://localhost:8080/";
+                        const powerCord = new SRPC([swUrl]);
+                        $$.swarmEngine.plug(identity, powerCord);
+                    }
+
+                    $$.interactions.startSwarmAs("test/agent/007", "dossierBuilder", "createLeafletDossier", this.model.leaflet).onReturn( (err, seed) => {
+                        console.log("Leaflet DSU created ####################################333", err, seed);
+                        newEvent.data = {
+                            leaflet: this.model.leaflet,
+                            source: profile.code,
+                            leafletSEED: seed
+                        };
+                        window.parent.dispatchEvent(newEvent);
+                    });
                 });
             });
         }, {capture: true});
@@ -168,8 +178,11 @@ export default class newLeafletController extends ContainerController {
                 }
             }
 
-            leaflets.push(leaflet);
-            this.DSUStorage.setItem(LEAFLETS_PATH, JSON.stringify(leaflets), callback);
+            this.DSUStorage.setItem(`/app/data/${leaflet.id}/attachment.pdf`, this.attachment, (err) => {
+                leaflet.attachment = `/app/data/${leaflet.id}/attachment.pdf`;
+                leaflets.push(leaflet);
+                this.DSUStorage.setItem(LEAFLETS_PATH, JSON.stringify(leaflets), callback);
+            });
         });
     }
 
