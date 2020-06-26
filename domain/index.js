@@ -18,8 +18,8 @@ $$.swarm.describe("dossierBuilder", {
                         return this.return(err);
                     }
 
-                    console.log("Read attachment data");
-                    dossier.writeFile("/attachment.pdf", attachmentData, (err) => {
+                    console.log("Read attachment data", attachmentData);
+                    dossier.writeFile("/attachment.png", attachmentData, (err) => {
                         if (err) {
                             return this.return(err);
                         }

@@ -13,7 +13,15 @@ export default class newLeafletController extends ContainerController {
     constructor(element, history) {
         super(element);
 
-        this.setModel({products: {}, contacts: {}});
+        this.setModel({
+            products: {
+                label: "Products",
+                placeholder: "Select a product"
+            }, contacts: {
+                label: "Health Authority",
+                placeholder: "Select a health authority"
+            }
+        });
         if (typeof history.location.state !== "undefined") {
             this.leafletIndex = history.location.state.leafletIndex;
         }
@@ -37,41 +45,17 @@ export default class newLeafletController extends ContainerController {
             }
 
             let availableProducts = [];
-            let productsPlaceholder = "Select a product";
-            if (typeof this.model.leaflet.productId !== undefined) {
-                let prod = products.find(product => product.serialNumber === this.model.leaflet.productId);
-                if (typeof prod !== "undefined") {
-                    productsPlaceholder = prod.name;
-                }
-            }
             products.forEach(product => availableProducts.push(new Product(product).generateViewModel()));
-            this.model.products = {
-                label: "Products",
-                placeholder: productsPlaceholder,
-                options: availableProducts
-            };
-
-            this.DSUStorage.getObject(CONTACTS_PATH, (err, contacts) => {
-                if (typeof contacts === "undefined") {
-                    contacts = [];
-                }
-                const options = [];
-                let contactsPlaceHolder = "Select a Health Authority";
-                if (typeof this.model.leaflet.healthAuthority !== "undefined") {
-                    const healthAuthority = contacts.find(contact => contact.code === this.model.leaflet.healthAuthority);
-                    if (typeof healthAuthority !== "undefined") {
-                        contactsPlaceHolder = healthAuthority.name;
-                    }
-                }
-                contacts.forEach(contact => options.push(new Contact(contact).generateViewModel()));
-                this.model.contacts = {
-                    label: "Health Authority",
-                    placeholder: contactsPlaceHolder,
-                    options: options
-                };
-            });
+            this.model.products.options = availableProducts
         });
-
+        this.DSUStorage.getObject(CONTACTS_PATH, (err, contacts) => {
+            if (typeof contacts === "undefined") {
+                contacts = [];
+            }
+            const options = [];
+            contacts.forEach(contact => options.push(new Contact(contact).generateViewModel()));
+            this.model.contacts.options = options;
+        });
         this.on("attachment-selected", (event) => {
             this.attachment = event.data[0];
         });
@@ -95,7 +79,7 @@ export default class newLeafletController extends ContainerController {
                         $$.swarmEngine.plug(identity, powerCord);
                     }
 
-                    $$.interactions.startSwarmAs("test/agent/007", "dossierBuilder", "createLeafletDossier", this.model.leaflet).onReturn( (err, seed) => {
+                    $$.interactions.startSwarmAs("test/agent/007", "dossierBuilder", "createLeafletDossier", this.model.leaflet).onReturn((err, seed) => {
                         console.log("Leaflet DSU created ####################################333", err, seed);
                         newEvent.data = {
                             leaflet: this.model.leaflet,
@@ -178,8 +162,8 @@ export default class newLeafletController extends ContainerController {
                 }
             }
 
-            this.DSUStorage.setItem(`/app/data/${leaflet.id}/attachment.pdf`, this.attachment, (err) => {
-                leaflet.attachment = `/app/data/${leaflet.id}/attachment.pdf`;
+            this.DSUStorage.setItem(`/app/data/${leaflet.id}/attachment.png`, this.attachment, (err) => {
+                leaflet.attachment = `/app/data/${leaflet.id}/attachment.png`;
                 leaflets.push(leaflet);
                 this.DSUStorage.setItem(LEAFLETS_PATH, JSON.stringify(leaflets), callback);
             });
