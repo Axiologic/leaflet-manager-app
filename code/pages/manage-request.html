@@ -1,0 +1,9 @@
+<psk-page title="">
+    <psk-form controller-name="requestController">
+        <psk-select view-model="@leaflets" value="@selectedLeaflet"></psk-select>
+        <psk-select view-model="@contacts" value="@selectedHA" required></psk-select>
+
+        <psk-button label="Send for Approval" event-name="send-leaflet"></psk-button>
+        <psk-list-feedbacks></psk-list-feedbacks>
+    </psk-form>
+</psk-page>

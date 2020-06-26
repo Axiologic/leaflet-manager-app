@@ -2,7 +2,7 @@
     <psk-form controller-name="ProductsController">
         <psk-condition condition="@productsListLoaded">
             <psk-for-each slot="condition-true" data-view-model="products">
-                <psk-form-row columns="2" layout="xs=[3,9] s=[3,9] m=[3,9] xl=[3,9]">
+                <psk-form-row columns="2" layout="xs=[3,9] s=[4,8] m=[3,9] xl=[3,9]">
                     <psk-img width="150" src="@photo"></psk-img>
                     <div>
                         <b><psk-label label="@name" onclick="this.dispatchEvent(new Event('edit-product'))"></psk-label></b>
@@ -15,11 +15,10 @@
                 Product list loading...
             </div>
         </psk-condition>
-
-        <psk-grid columns="3" layout="xs=[2,8,2] s=[2,8,2] m=[2,8,2] xl=[2,8,2]">
+        <div style="min-height: 30px;"></div>
+        <psk-grid columns="2" layout="xs=[3,9] s=[4,8] m=[3,9] xl=[3,9]">
             <div></div>
             <psk-button event-name="add-product" label="Add Product"></psk-button>
-            <div></div>
         </psk-grid>
     </psk-form>
 </psk-page>

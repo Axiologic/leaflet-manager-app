@@ -29,6 +29,10 @@
       {
         "name": "Manage leaflet",
         "indexed": false
+      },
+      {
+        "name": "Manage request",
+        "indexed": false
       }
     ]
   }

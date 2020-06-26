@@ -4,22 +4,14 @@
         <psk-text-input label="Active substances" value="@leaflet.activeSubstances"></psk-text-input>
         <psk-text-input label="Recommendations" value="@leaflet.recommendations"></psk-text-input>
         <psk-text-input label="Contraindication" value="@leaflet.contraindication"></psk-text-input>
-        <psk-select view-model="@contacts" value="@leaflet.healthAuthority" required></psk-select>
         <psk-form-row>
-            <psk-grid columns="3" layout="xs=[2,8,2] s=[2,8,2] m=[2,8,2] xl=[2,8,2]" style="max-width:900px;">
-                <psk-files-chooser label="Attach" event-name="attachment-selected" ></psk-files-chooser>
-                <psk-label label="@attachment.name"></psk-label>
-            </psk-grid>
+            <psk-label label="Attachment"></psk-label>
+            <psk-files-chooser label="Attach file" event-name="attachment-selected" class="paperclip"></psk-files-chooser>
+            <psk-label label="@attachment.name" class="inline"></psk-label>
         </psk-form-row>
+        <div style="min-height: 30px;"></div>
+        <psk-button label="Save Leaflet" event-name="add-leaflet"></psk-button>
 
-        <psk-grid columns="3" layout="xs=[2,8,2] s=[2,8,2] m=[2,8,2] xl=[2,8,2]" style="max-width:900px;">
-            <div></div>
-            <div>
-                <psk-button label="Save Leaflet" event-name="add-leaflet"></psk-button>
-                <psk-button label="Send for Approval" event-name="send-leaflet"></psk-button>
-            </div>
-            <div></div>
-        </psk-grid>
         <psk-list-feedbacks></psk-list-feedbacks>
     </psk-form>
 </psk-page>
