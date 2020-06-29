@@ -29,9 +29,6 @@ export default class Leaflet {
 
 	validate(){
 		const errors = [];
-		if (!this.healthAuthority) {
-			errors.push('Health Authority contact is required.');
-		}
 
 		if (!this.attachment) {
 			errors.push('Leaflet attachment is required.');
