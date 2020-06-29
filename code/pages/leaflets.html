@@ -5,7 +5,7 @@
                 <psk-form-row columns="2" layout="xs=[1, 11] s=[2, 10] m=[1, 11] xl=[1, 11]" class="withSeparator">
                     <psk-img src="/data/photos/leaflet.png"></psk-img>
                     <div>
-                        <b><psk-label label="@name" onclick="this.dispatchEvent(new Event('edit-leaflet'))"></psk-label></b>
+                        <b><psk-label label="@name" onclick="this.dispatchEvent(new Event('edit-leaflet'))" class="pointer"></psk-label></b>
                         <psk-label label="@activeSubstances"></psk-label>
                     </div>
                 </psk-form-row>
@@ -15,11 +15,7 @@
                 Leaflets list loading...
             </div>
         </psk-condition>
-
         <div style="min-height: 30px;"></div>
-        <psk-grid columns="2" layout="xs=[1, 11] s=[2, 10] m=[1, 11] xl=[1, 11]">
-            <div></div>
-            <psk-button event-name="add-leaflet" label="Create Leaflet"></psk-button>
-        </psk-grid>
+        <psk-button event-name="add-leaflet" label="Create Leaflet"></psk-button>
     </psk-form>
 </psk-page>
