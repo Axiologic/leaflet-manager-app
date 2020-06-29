@@ -58,6 +58,7 @@ export default class newLeafletController extends ContainerController {
         });
         this.on("attachment-selected", (event) => {
             this.attachment = event.data[0];
+            this.model.attachment = event.data[0];
         });
 
         this.on('openFeedback', (e) => {
