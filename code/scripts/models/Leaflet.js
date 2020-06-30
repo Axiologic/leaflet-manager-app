@@ -17,6 +17,7 @@ export default class Leaflet {
 	country;
 	healthAuthority;
 	attachment = "/resources/images/default.png";
+	dsuKeySSI;
 	id = generateProductCode(10);
 
 	constructor(leaflet) {

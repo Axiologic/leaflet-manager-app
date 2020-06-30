@@ -81,7 +81,6 @@ export default class newLeafletController extends ContainerController {
                     }
 
                     $$.interactions.startSwarmAs("test/agent/007", "dossierBuilder", "createLeafletDossier", this.model.leaflet).onReturn((err, seed) => {
-                        console.log("Leaflet DSU created ####################################333", err, seed);
                         newEvent.data = {
                             leaflet: this.model.leaflet,
                             source: profile.code,
@@ -95,6 +94,29 @@ export default class newLeafletController extends ContainerController {
 
         this.on("add-leaflet", (event) => {
             this.saveLeaflet(history);
+        });
+    }
+
+    generateLeafletDSU(leaflet, callback){
+        if (typeof $$.interactions === "undefined") {
+            require('callflow').initialise();
+            const se = require("swarm-engine");
+            const identity = "demo/agent/007";
+            se.initialise(identity);
+            const SRPC = se.SmartRemoteChannelPowerCord;
+
+            let swUrl = window.location.origin;
+            const powerCord = new SRPC([swUrl]);
+            $$.swarmEngine.plug(identity, powerCord);
+        }
+
+        $$.interactions.startSwarmAs(identity, "dossierBuilder", "createLeafletDossier", leaflet).onReturn((err, KeySSI) => {
+           if(err){
+               return callback(err);
+           }
+
+           leaflet.dsuKeySSI = KeySSI;
+           callback(undefined, leaflet);
         });
     }
 
