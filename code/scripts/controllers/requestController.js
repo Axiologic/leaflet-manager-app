@@ -30,11 +30,11 @@ export default class requestController extends ContainerController {
             }
 
             this.leafletsRepo = leafletsRepo;
-
+            const options = [];
             leafletsRepo.forEach((leaflet, index)=>{
-                this.model.leaflets.options.push({label: leaflet.name, value: index});
+                options.push({label: leaflet.name, value: index});
             });
-
+            this.model.setChainValue("leaflets.options", options);
         });
 
         this.DSUStorage.getObject(CONTACTS_PATH, (err, contacts) => {
@@ -44,7 +44,7 @@ export default class requestController extends ContainerController {
             this.contacts = contacts;
             const options = [];
             contacts.forEach(contact => options.push(new Contact(contact).generateViewModel()));
-            this.model.contacts.options = options;
+            this.model.setChainValue("contacts.options", options);
         });
 
         this.on('openFeedback', (e) => {

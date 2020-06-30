@@ -6,7 +6,7 @@ import DossierBuilder from "../services/DossierBuilder.js";
 
 const PRODUCTS_PATH = "/app/data/products.json";
 const PROFILE_PATH = "/app/data/profile.json";
-const CONTACTS_PATH = "/app/data/contacts.json";
+const CONTACTS_PATH = "/app/data/contact s.json";
 const LEAFLETS_PATH = "/app/data/leaflets.json";
 
 export default class newLeafletController extends ContainerController {
@@ -46,7 +46,7 @@ export default class newLeafletController extends ContainerController {
 
             let availableProducts = [];
             products.forEach(product => availableProducts.push(new Product(product).generateViewModel()));
-            this.model.products.options = availableProducts
+            this.model.setChainValue("products.options", availableProducts);
         });
         this.DSUStorage.getObject(CONTACTS_PATH, (err, contacts) => {
             if (typeof contacts === "undefined") {
@@ -54,7 +54,7 @@ export default class newLeafletController extends ContainerController {
             }
             const options = [];
             contacts.forEach(contact => options.push(new Contact(contact).generateViewModel()));
-            this.model.contacts.options = options;
+            this.model.setChainValue("contacts.options", options);
         });
         this.on("attachment-selected", (event) => {
             this.attachment = event.data[0];
@@ -81,7 +81,6 @@ export default class newLeafletController extends ContainerController {
                     }
 
                     $$.interactions.startSwarmAs("test/agent/007", "dossierBuilder", "createLeafletDossier", this.model.leaflet).onReturn((err, seed) => {
-                        console.log("Leaflet DSU created ####################################333", err, seed);
                         newEvent.data = {
                             leaflet: this.model.leaflet,
                             source: profile.code,
