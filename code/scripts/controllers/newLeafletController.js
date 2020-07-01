@@ -2,11 +2,12 @@ import ContainerController from "../../cardinal/controllers/base-controllers/Con
 import Leaflet from "../models/Leaflet.js";
 import Contact from "../models/Contact.js";
 import Product from "../models/Product.js";
+import Message from "../models/Message.js";
 import DossierBuilder from "../services/DossierBuilder.js";
 
 const PRODUCTS_PATH = "/app/data/products.json";
 const PROFILE_PATH = "/app/data/profile.json";
-const CONTACTS_PATH = "/app/data/contact s.json";
+const CONTACTS_PATH = "/app/data/contacts.json";
 const LEAFLETS_PATH = "/app/data/leaflets.json";
 
 export default class newLeafletController extends ContainerController {
@@ -81,12 +82,13 @@ export default class newLeafletController extends ContainerController {
                     }
 
                     $$.interactions.startSwarmAs("test/agent/007", "dossierBuilder", "createLeafletDossier", this.model.leaflet).onReturn((err, seed) => {
-                        newEvent.data = {
-                            leaflet: this.model.leaflet,
-                            source: profile.code,
-                            leafletSEED: seed
-                        };
-                        window.parent.dispatchEvent(newEvent);
+                        const message = new Message().getApprovalMessage(this.model.leaflet);
+                        message.from = profile.code;
+                        message.dsu = seed;
+                        this.buildMessageDSU(message, (err, messageDSUSeed) => {
+                            newEvent.data = messageDSUSeed;
+                            window.parent.dispatchEvent(newEvent);
+                        });
                     });
                 });
             });

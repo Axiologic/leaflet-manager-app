@@ -3,6 +3,7 @@ import Leaflet from "../models/Leaflet.js";
 import Contact from "../models/Contact.js";
 import Product from "../models/Product.js";
 import DossierBuilder from "../services/DossierBuilder.js";
+import Message from "../models/Message.js";
 
 const PRODUCTS_PATH = "/app/data/products.json";
 const PROFILE_PATH = "/app/data/profile.json";
@@ -31,7 +32,7 @@ export default class requestController extends ContainerController {
 
             this.leafletsRepo = leafletsRepo;
             const options = [];
-            leafletsRepo.forEach((leaflet, index)=>{
+            leafletsRepo.forEach((leaflet, index) => {
                 options.push({label: leaflet.name, value: index});
             });
             this.model.setChainValue("leaflets.options", options);
@@ -68,17 +69,27 @@ export default class requestController extends ContainerController {
 
                 let leaflet = this.leafletsRepo[0];
                 leaflet.healthAuthority = this.contacts[0].code;
+                $$.interactions.startSwarmAs("test/agent/007", "dossierBuilder", "getConstitutionSeed").onReturn((err, constitutionSeed) => {
+                    $$.interactions.startSwarmAs("test/agent/007", "dossierBuilder", "createLeafletDossier", leaflet, constitutionSeed).onReturn((err, seed) => {
+                        console.log("=======================================================================");
+                        console.log("Leaflet DSU created", err, seed);
+                        console.log("=======================================================================");
+                        const message = new Message().getApprovalMessage(leaflet);
+                        message.from = profile.code;
+                        message.dsu = seed;
 
-                $$.interactions.startSwarmAs("test/agent/007", "dossierBuilder", "createLeafletDossier", leaflet).onReturn((err, seed) => {
-                    console.log("=======================================================================");
-                    console.log("Leaflet DSU created", err, seed);
-                    console.log("=======================================================================");
-                    newEvent.data = {
-                        leaflet,
-                        source: profile.code,
-                        leafletSEED: seed
-                    };
-                    window.parent.dispatchEvent(newEvent);
+                        $$.interactions.startSwarmAs("test/agent/007", "dossierBuilder", "createMessageDSU", message, seed).onReturn((err, messageDSUSeed) => {
+                            console.log("Built Message DSU SEED", messageDSUSeed);
+                            newEvent.data = {
+                                leaflet,
+                                source: profile.code,
+                                leafletSEED: seed,
+                                messageDSUSeed: messageDSUSeed
+                            };
+
+                            window.parent.dispatchEvent(newEvent);
+                        });
+                    });
                 });
             });
         }, {capture: true});
