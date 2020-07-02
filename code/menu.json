@@ -24,6 +24,14 @@
     {
       "name": "Manage request",
       "indexed": false
+    },
+    {
+      "name": "Review Leaflet",
+      "indexed": false
+    },
+    {
+      "name": "View Leaflet",
+      "indexed": false
     }
   ]
 }

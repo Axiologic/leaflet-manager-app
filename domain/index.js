@@ -1,8 +1,7 @@
 //Add specific code here (swarms, flows, assets, transactions)
 $$.swarm.describe("dossierBuilder", {
-    createLeafletDossier: function (leaflet, constitutionSeed) {
+    createLeafletDossier: function (leaflet) {
         require("edfs").attachWithSeed(rawDossier.getSeed(), (err, edfs) => {
-            console.log("Got edfs instance");
             if (err) {
                 return this.return(err);
             }
@@ -29,10 +28,16 @@ $$.swarm.describe("dossierBuilder", {
                                 return this.return(err);
                             }
                             console.log("Wrote leaflet.json");
-
-                            dossier.mount("/code", constitutionSeed, (err) => {
-                                this.return(err, dossier.getSeed());
+                            rawDossier.listMountedDossiers("/", (err, mounts) => {
+                                if(err){
+                                    return this.return(err);
+                                }
+                                let constitutionSeed = mounts[0].identifier;
+                                dossier.mount("/code", constitutionSeed, (err) => {
+                                    this.return(err, dossier.getSeed());
+                                });
                             });
+
                         });
                     });
                 });
