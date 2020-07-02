@@ -187,8 +187,8 @@ export default class newLeafletController extends ContainerController {
                 }
             }
 
-            this.DSUStorage.setItem(`/app/data/${leaflet.id}/attachment.png`, this.attachment, (err) => {
-                leaflet.attachment = `/app/data/${leaflet.id}/attachment.png`;
+            this.DSUStorage.setItem(`/app/data/${leaflet.id}/attachment.pdf`, this.attachment, (err) => {
+                leaflet.attachment = `/app/data/${leaflet.id}/attachment.pdf`;
                 leaflets.push(leaflet);
                 this.DSUStorage.setItem(LEAFLETS_PATH, JSON.stringify(leaflets), callback);
             });
