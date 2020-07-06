@@ -1,14 +1,18 @@
 function getBaseURL() {
+    return `${constructEndpoint()}/dossierWizard`;
+}
+
+function constructEndpoint(){
     const protocol = window.location.protocol;
     const host = window.location.hostname;
     const port = window.location.port;
 
-    return `${protocol}//${host}:${port}/dossierWizard`;
+    return `${protocol}//${host}:${port}`;
 }
 
 function setEndpoint(transactionId, callback) {
     const url = `/setEndpoint/${transactionId}`;
-    const endpoint = "http://localhost:8080";
+    const endpoint = constructEndpoint();
     doPost(url, endpoint, callback);
 }
 

@@ -1,6 +1,5 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
 const LEAFLETS_PATH = "/app/data/leaflets.json";
-const PRODUCTS_PATH = "/app/data/products.json";
 
 export default class LeafletsController extends ContainerController {
 	constructor(element, history) {
@@ -28,6 +27,18 @@ export default class LeafletsController extends ContainerController {
 		this.on("add-leaflet", (event)=>{
 			history.push("/manage-leaflet");
 		});
+
+		this.on('copy-leaflet-dsu', (event)=>{
+			let target = event.target;
+			let targetName = target.getAttribute("name");
+
+			let found = false;
+			for(let i=0; i<this.model.leaflets.length; i++){
+				if(this.model.leaflets[i].name === targetName){
+					found = this.model.leaflets[i];
+				}
+			}
+		}, {capture: true});
 
 		this.on("edit-leaflet", (event)=>{
 			let target = event.target;

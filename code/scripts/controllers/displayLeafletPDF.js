@@ -1,6 +1,6 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
-class FileDownloader {
 
+class FileDownloader {
     constructor(path, fileName) {
         this.path = path;
         this.fileName = fileName;
@@ -57,7 +57,6 @@ class FileDownloader {
 
 const TEXT_MIME_TYPE = "text/";
 
-
 export default class displayLeafletPDF extends ContainerController {
     constructor(element, history) {
         super(element, history);
@@ -68,7 +67,6 @@ export default class displayLeafletPDF extends ContainerController {
         this.fileDownloader = new FileDownloader(this.path, this.fileName);
 
         this._downloadFile();
-        // this._initListeners();
     }
 
     _downloadFile = () => {
@@ -200,9 +198,6 @@ export default class displayLeafletPDF extends ContainerController {
     };
 
     _appendAsset = (assetObject) => {
-        console.log("Preparing to show file ==================");
-
-
         let assetContainer = this.element.querySelector(".content");
         if (assetContainer) {
             assetContainer.append(assetObject);

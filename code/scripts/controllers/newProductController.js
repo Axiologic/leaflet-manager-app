@@ -2,7 +2,6 @@ import ContainerController from "../../cardinal/controllers/base-controllers/Con
 import Product from "../models/Product.js";
 
 const PRODUCTS_PATH = "/app/data/products.json";
-const LAST_PRODUCT_PATH = "/";
 
 export default class newProductController extends ContainerController {
     constructor(element, history) {
@@ -88,7 +87,7 @@ export default class newProductController extends ContainerController {
                 products.splice(this.productIndex, 1);
             } else {
                 const prod = products.find(prod => prod.name === product.name);
-                if (typeof prod === "undefined") {
+                if (typeof prod !== "undefined") {
                     return callback(new Error("Product already exists into the list!"));
                 }
             }

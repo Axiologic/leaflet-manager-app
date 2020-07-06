@@ -1,10 +1,7 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
-import Leaflet from "../models/Leaflet.js";
+import Utils from "./utils.js";
 import Contact from "../models/Contact.js";
-import Product from "../models/Product.js";
-import DossierBuilder from "../services/DossierBuilder.js";
 
-const PRODUCTS_PATH = "/app/data/products.json";
 const PROFILE_PATH = "/app/data/profile.json";
 const CONTACTS_PATH = "/app/data/contacts.json";
 const LEAFLETS_PATH = "/app/data/leaflets.json";
@@ -54,25 +51,12 @@ export default class requestController extends ContainerController {
         this.on("send-leaflet", (event) => {
             this.DSUStorage.getObject(PROFILE_PATH, (err, profile) => {
 
-                const identity = "demo/agent/007";
-                if (typeof $$.interactions === "undefined") {
-                    require('callflow').initialise();
-                    const se = require("swarm-engine");
-                    se.initialise(identity);
-                    const SRPC = se.SmartRemoteChannelPowerCord;
-
-                    let swUrl = window.location.origin;
-                    if(!swUrl.endsWith("/")){
-                        swUrl += "/";
-                    }
-                    const powerCord = new SRPC([swUrl]);
-                    $$.swarmEngine.plug(identity, powerCord);
-                }
+                Utils.initializeSwarmEnvironment()
 
                 let leaflet = this.leafletsRepo[0];
                 leaflet.healthAuthority = this.contacts[0].code;
 
-                $$.interactions.startSwarmAs(identity, "dossierBuilder", "createLeafletDossier", leaflet).onReturn((err, seed) => {
+                $$.interactions.startSwarmAs(Utils.getIdentity(), "dossierBuilder", "createLeafletDossier", leaflet).onReturn((err, seed) => {
                     console.log("=======================================================================");
                     console.log("Leaflet DSU created", err, seed);
                     console.log("=======================================================================");

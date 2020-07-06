@@ -3,7 +3,7 @@
         <psk-condition condition="@leafletsListLoaded">
             <psk-for-each slot="condition-true" data-view-model="leaflets">
                 <psk-form-row columns="2" layout="xs=[1, 11] s=[2, 10] m=[1, 11] xl=[1, 11]" class="withSeparator">
-                    <psk-img src="/data/photos/leaflet.png"></psk-img>
+                    <psk-img src="/data/photos/leaflet.png" style="display: inline-flex;"></psk-img>
                     <div>
                         <b><psk-label label="@name" onclick="this.dispatchEvent(new Event('edit-leaflet'))" class="pointer"></psk-label></b>
                         <psk-label label="@activeSubstances"></psk-label>

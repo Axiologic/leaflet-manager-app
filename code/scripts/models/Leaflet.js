@@ -1,12 +1,4 @@
-function generateProductCode(length) {
-	let result           = '';
-	let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	let charactersLength = characters.length;
-	for ( let i = 0; i < length; i++ ) {
-		result += characters.charAt(Math.floor(Math.random() * charactersLength));
-	}
-	return result;
-}
+import Utils from "./Utils.js";
 
 export default class Leaflet {
 	name;
@@ -18,7 +10,7 @@ export default class Leaflet {
 	healthAuthority;
 	attachment = "/resources/images/default.png";
 	dsuKeySSI;
-	id = generateProductCode(10);
+	id = Utils.generateID(10);
 
 	constructor(leaflet) {
 		if(typeof leaflet !== undefined){

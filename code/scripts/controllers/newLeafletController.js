@@ -1,13 +1,14 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
+import Utils from "./utils.js";
+
+//models
 import Leaflet from "../models/Leaflet.js";
-import Contact from "../models/Contact.js";
 import Product from "../models/Product.js";
 import Message from "../models/Message.js";
-import DossierBuilder from "../services/DossierBuilder.js";
 
+//working paths for different storage files
 const PRODUCTS_PATH = "/app/data/products.json";
 const PROFILE_PATH = "/app/data/profile.json";
-const CONTACTS_PATH = "/app/data/contacts.json";
 const LEAFLETS_PATH = "/app/data/leaflets.json";
 
 export default class newLeafletController extends ContainerController {
@@ -18,14 +19,13 @@ export default class newLeafletController extends ContainerController {
             products: {
                 label: "Products",
                 placeholder: "Select a product"
-            }, contacts: {
-                label: "Health Authority",
-                placeholder: "Select a health authority"
             }
         });
+
         if (typeof history.location.state !== "undefined") {
             this.leafletIndex = history.location.state.leafletIndex;
         }
+
         if (typeof this.leafletIndex !== "undefined") {
             this.DSUStorage.getObject(LEAFLETS_PATH, (err, leaflets) => {
                 if (err) {
@@ -39,7 +39,6 @@ export default class newLeafletController extends ContainerController {
             this.model.leaflet = new Leaflet();
         }
 
-
         this.DSUStorage.getObject(PRODUCTS_PATH, (err, products) => {
             if (err) {
                 throw err;
@@ -49,14 +48,7 @@ export default class newLeafletController extends ContainerController {
             products.forEach(product => availableProducts.push(new Product(product).generateViewModel()));
             this.model.setChainValue("products.options", availableProducts);
         });
-        this.DSUStorage.getObject(CONTACTS_PATH, (err, contacts) => {
-            if (typeof contacts === "undefined") {
-                contacts = [];
-            }
-            const options = [];
-            contacts.forEach(contact => options.push(new Contact(contact).generateViewModel()));
-            this.model.setChainValue("contacts.options", options);
-        });
+
         this.on("attachment-selected", (event) => {
             this.attachment = event.data[0];
             this.model.attachment = event.data[0];
@@ -70,18 +62,9 @@ export default class newLeafletController extends ContainerController {
             this.DSUStorage.getObject(PROFILE_PATH, (err, profile) => {
                 let newEvent = new Event("send-leaflet");
                 this.persistLeaflet(this.model.leaflet, (err) => {
-                    if (typeof $$.interactions === "undefined") {
-                        require('callflow').initialise();
-                        const se = require("swarm-engine");
-                        const identity = "test/agent/007";
-                        se.initialise(identity);
-                        const SRPC = se.SmartRemoteChannelPowerCord;
-                        let swUrl = "http://localhost:8080/";
-                        const powerCord = new SRPC([swUrl]);
-                        $$.swarmEngine.plug(identity, powerCord);
-                    }
 
-                    $$.interactions.startSwarmAs("test/agent/007", "dossierBuilder", "createLeafletDossier", this.model.leaflet).onReturn((err, seed) => {
+                    Utils.initializeSwarmEnvironment();
+                    $$.interactions.startSwarmAs(Utils.getIdentity(), "dossierBuilder", "createLeafletDossier", this.model.leaflet).onReturn((err, seed) => {
                         const message = new Message().getApprovalMessage(this.model.leaflet);
                         message.from = profile.code;
                         message.dsu = seed;
@@ -96,29 +79,6 @@ export default class newLeafletController extends ContainerController {
 
         this.on("add-leaflet", (event) => {
             this.saveLeaflet(history);
-        });
-    }
-
-    generateLeafletDSU(leaflet, callback){
-        if (typeof $$.interactions === "undefined") {
-            require('callflow').initialise();
-            const se = require("swarm-engine");
-            const identity = "demo/agent/007";
-            se.initialise(identity);
-            const SRPC = se.SmartRemoteChannelPowerCord;
-
-            let swUrl = window.location.origin;
-            const powerCord = new SRPC([swUrl]);
-            $$.swarmEngine.plug(identity, powerCord);
-        }
-
-        $$.interactions.startSwarmAs(identity, "dossierBuilder", "createLeafletDossier", leaflet).onReturn((err, KeySSI) => {
-           if(err){
-               return callback(err);
-           }
-
-           leaflet.dsuKeySSI = KeySSI;
-           callback(undefined, leaflet);
         });
     }
 
@@ -175,7 +135,6 @@ export default class newLeafletController extends ContainerController {
             if (typeof leaflets === "undefined") {
                 leaflets = [];
             }
-
 
             if (typeof this.leafletIndex !== "undefined") {
                 //update of a leaflet scenario

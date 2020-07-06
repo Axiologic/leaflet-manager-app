@@ -1,18 +1,10 @@
-function generateProductCode(length) {
-	var result           = '';
-	var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	var charactersLength = characters.length;
-	for ( var i = 0; i < length; i++ ) {
-		result += characters.charAt(Math.floor(Math.random() * charactersLength));
-	}
-	return result;
-}
+import Utils from "./Utils.js";
 
 export default class Product {
 	name = "";
 	productTypeSerialNumber = "";
 	photo = "/resources/images/default.png";
-	serialNumber = generateProductCode(10);
+	serialNumber = Utils.generateID(10);
 
 	constructor(product) {
 		if(typeof product !== undefined){
