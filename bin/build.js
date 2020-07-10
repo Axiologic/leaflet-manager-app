@@ -73,22 +73,37 @@ function updateDossier(bar, callback) {
                             return callback(err);
                         }
                         try {
-                            APP_CONFIG = require(CONFIG_PATH);
-                            if (APP_CONFIG.theme) {
-                                return getThemeDossierSeed(APP_CONFIG.theme,(err, themeSeed) => {
+                            let themeNames = fs.readdirSync(THEMES_PATH);
+                            function addTheme(theme, callback){
+                                getThemeDossierSeed(theme,(err, themeSeed) => {
                                     if (err) {
                                         return callback(err);
                                     }
 
-                                    loadedDossier.mount(`/themes/${APP_CONFIG.theme}`, themeSeed, (err) => {
+                                    loadedDossier.mount(`/themes/${theme}`, themeSeed, (err) => {
                                         if (err) {
                                             return callback(err);
                                         }
-                                        storeSeed(DOSSIER_SEED_FILE_PATH, loadedDossier.getSeed(), callback);
+
+                                        if(themeNames.length !== 0){
+                                            addTheme(themeNames.pop(), callback);
+                                        }else{
+                                            return callback();
+                                        }
                                     });
                                 })
                             }
-                            storeSeed(DOSSIER_SEED_FILE_PATH, loadedDossier.getSeed(), callback);
+
+                            if(themeNames.length > 0){
+                                addTheme(themeNames.pop(), function(err){
+                                    if (err) {
+                                        return callback(err);
+                                    }
+                                    storeSeed(DOSSIER_SEED_FILE_PATH, loadedDossier.getSeed(), callback);
+                                })
+                            }else{
+                                storeSeed(DOSSIER_SEED_FILE_PATH, loadedDossier.getSeed(), callback);
+                            }
                         } catch (e) {
                             storeSeed(DOSSIER_SEED_FILE_PATH, loadedDossier.getSeed(), callback);
                         }
