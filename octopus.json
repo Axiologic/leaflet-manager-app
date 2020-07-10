@@ -8,7 +8,7 @@
       "actions": [
         {
           "type": "execute",
-          "cmd": "node ../privatesky/bin/scripts/pskbuild.js --projectMap=./build/build.json  --prod=true --output=./code/constitution"
+          "cmd": "node ../privatesky/psknode/bin/scripts/pskbuild.js --projectMap=./build/build.json  --prod=true --output=./code/constitution"
         },
         {
           "type": "copy",
