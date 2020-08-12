@@ -138,7 +138,7 @@ function build(callback) {
 
         let keySSI;
         try {
-            keySSI = require("key-ssi-resolver").keySSIFactory.create(content.toString());
+            keySSI = require("key-ssi-resolver").KeySSIFactory.create(content.toString());
         } catch (err) {
             console.log("Invalid keySSI. Creating a new Dossier...");
             return createDossier(callback);
